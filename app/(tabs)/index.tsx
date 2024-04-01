@@ -1,35 +1,48 @@
-import { StyleSheet } from 'react-native';
-
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
-import {Button} from "react-native-paper";
+import { FAB, Surface, useTheme } from "react-native-paper";
+import { View } from "react-native";
+import { FlashList } from "@shopify/flash-list";
+import { LinkCard } from "@/components/LinkCard";
 
 export default function TabOneScreen() {
+  const theme = useTheme();
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <Button icon="camera" mode="contained" onPress={() => console.log('Pressed')}>
-        Press me
-      </Button>
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
-    </View>
+    <Surface
+      style={{
+        flex: 1,
+        alignItems: "center",
+        width: "100%",
+        height: "100%",
+      }}
+    >
+      <View style={{ width: "100%", height: "100%" }}>
+        <FlashList
+          data={[
+            { title: "Faster internet", url: "https://google.com" },
+            {
+              title: "Building a NextJs modal with capture all route",
+              url: "https://bing.com",
+            },
+          ]}
+          estimatedItemSize={101}
+          contentContainerStyle={{
+            paddingHorizontal: 8,
+            paddingVertical: 12,
+          }}
+          renderItem={({ item }) => (
+            <LinkCard
+              title={item.title}
+              url={item.url}
+              onLongPress={() => {}}
+            />
+          )}
+        />
+      </View>
+      <FAB
+        icon={"plus"}
+        onPress={() => {}}
+        style={{ position: "absolute", margin: 16, bottom: 0, right: 0 }}
+      />
+    </Surface>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});
