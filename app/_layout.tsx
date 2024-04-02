@@ -1,4 +1,3 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -8,6 +7,10 @@ import { Appbar, PaperProvider } from "react-native-paper";
 import { getHeaderTitle } from "@react-navigation/elements";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
+import { db } from "@/db/db";
+
+import migrations from "../.drizzle/migrations";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -25,7 +28,6 @@ void SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-    ...FontAwesome.font,
   });
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
@@ -47,6 +49,12 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+  const { error: migrationError } = useMigrations(db, migrations);
+
+  if (migrationError) {
+    alert("Something went wrong setting up the app.\n" + migrationError);
+  }
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <PaperProvider>
