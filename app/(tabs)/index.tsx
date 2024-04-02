@@ -1,14 +1,19 @@
-import { FAB, Surface, useTheme } from "react-native-paper";
+import { FAB, Surface } from "react-native-paper";
 import { View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { LinkCard } from "@/components/LinkCard";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { NewLinkBottomSheet } from "@/components/NewLinkBottomSheet";
+import { LinkOptionsBottomSheet } from "@/components/LinkOptionsBottomSheet";
 
 export default function TabOneScreen() {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
-  const theme = useTheme();
+  const linkOptionsRef = useRef<BottomSheetModal>(null);
+  const [pressedItem, setPressedItem] = useState<{
+    title: string;
+    url: string;
+  } | null>(null);
 
   return (
     <Surface
@@ -37,7 +42,13 @@ export default function TabOneScreen() {
             <LinkCard
               title={item.title}
               url={item.url}
-              onLongPress={() => {}}
+              onLongPress={() => {
+                setPressedItem({ title: item.title, url: item.url });
+                linkOptionsRef.current?.present({
+                  title: item.title,
+                  url: item.url,
+                });
+              }}
             />
           )}
         />
@@ -48,6 +59,7 @@ export default function TabOneScreen() {
         style={{ position: "absolute", margin: 16, bottom: 0, right: 0 }}
       />
       <NewLinkBottomSheet ref={bottomSheetRef} />
+      <LinkOptionsBottomSheet ref={linkOptionsRef} />
     </Surface>
   );
 }

@@ -45,20 +45,23 @@ export default function TabLayout() {
             }
           }}
           renderIcon={({ route, focused, color }) => {
-            const { options } = descriptors[route.key];
-            if (options.tabBarIcon) {
+            const descriptor = descriptors[route.key];
+            const options = descriptor?.options;
+            if (options?.tabBarIcon) {
               return options.tabBarIcon({ focused, color, size: 24 });
             }
 
             return null;
           }}
           getLabelText={({ route }) => {
-            const { options } = descriptors[route.key];
+            const descriptor = descriptors[route.key];
+            const options = descriptor?.options;
             const label =
+              options &&
               options.tabBarLabel !== undefined &&
               typeof options.tabBarLabel === "string"
                 ? options.tabBarLabel
-                : options.title !== undefined
+                : options?.title !== undefined
                   ? options.title
                   : route.name ?? "UHHHH";
 

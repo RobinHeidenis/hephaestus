@@ -12,8 +12,9 @@ export const BottomSheetBackHandler = () => {
     };
 
     BackHandler.addEventListener("hardwareBackPress", handleBack);
-    return () =>
+    return () => {
       BackHandler.removeEventListener("hardwareBackPress", handleBack);
+    };
   }, []);
 
   return null;

@@ -24,6 +24,9 @@
         "backgroundColor": "#25232A"
       }
     },
+    "androidNavigationBar": {
+      "backgroundColor": "#2C2831"
+    },
     "web": {
       "bundler": "metro",
       "output": "static",
