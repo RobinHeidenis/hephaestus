@@ -2,8 +2,12 @@ import { FAB, Surface, useTheme } from "react-native-paper";
 import { View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { LinkCard } from "@/components/LinkCard";
+import { useRef } from "react";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { NewLinkBottomSheet } from "@/components/NewLinkBottomSheet";
 
 export default function TabOneScreen() {
+  const bottomSheetRef = useRef<BottomSheetModal>(null);
   const theme = useTheme();
 
   return (
@@ -40,9 +44,10 @@ export default function TabOneScreen() {
       </View>
       <FAB
         icon={"plus"}
-        onPress={() => {}}
+        onPress={() => bottomSheetRef.current?.present()}
         style={{ position: "absolute", margin: 16, bottom: 0, right: 0 }}
       />
+      <NewLinkBottomSheet ref={bottomSheetRef} />
     </Surface>
   );
 }
