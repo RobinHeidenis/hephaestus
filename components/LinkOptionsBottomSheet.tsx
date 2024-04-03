@@ -7,9 +7,22 @@ import {
 import { forwardRef } from "react";
 import { BottomSheetBackHandler } from "@/components/BottomSheetBackHandler";
 import { Share, View } from "react-native";
+import { useDeleteLinkMutation } from "@/mutations/useDeleteLinkMutation";
+import { z } from "zod";
+import { useArchiveLinkMutation } from "@/mutations/useArchiveLinkMutation";
+
+const LinkOptionsBottomSheetDataSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  url: z.string(),
+});
 
 export const LinkOptionsBottomSheet = forwardRef<BottomSheetModal>((_, ref) => {
   const theme = useTheme();
+  const { mutate: deleteLink } = useDeleteLinkMutation();
+  const { mutate: archiveLink } = useArchiveLinkMutation();
+  if (typeof ref === "function")
+    throw new Error("Please pass a ref instead of a function");
 
   return (
     <BottomSheetModal
@@ -29,10 +42,10 @@ export const LinkOptionsBottomSheet = forwardRef<BottomSheetModal>((_, ref) => {
       style={{ marginBottom: 20 }}
     >
       {(data) => {
-        const { title, url } = data?.data as unknown as {
-          title: string;
-          url: string;
-        };
+        const { id, title, url } = LinkOptionsBottomSheetDataSchema.parse(
+          data?.data,
+        );
+
         return (
           <BottomSheetView>
             <BottomSheetBackHandler />
@@ -62,7 +75,10 @@ export const LinkOptionsBottomSheet = forwardRef<BottomSheetModal>((_, ref) => {
                 left={(props) => (
                   <List.Icon {...props} icon={"archive-outline"} />
                 )}
-                onPress={() => {}}
+                onPress={() => {
+                  archiveLink(id);
+                  ref?.current?.close();
+                }}
               />
               <List.Item
                 title={"Delete"}
@@ -74,7 +90,10 @@ export const LinkOptionsBottomSheet = forwardRef<BottomSheetModal>((_, ref) => {
                   />
                 )}
                 titleStyle={{ color: theme.colors.error }}
-                onPress={() => {}}
+                onPress={() => {
+                  deleteLink(id);
+                  ref?.current?.close();
+                }}
               />
             </List.Section>
           </BottomSheetView>

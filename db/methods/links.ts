@@ -30,3 +30,16 @@ export const createLink = async (title: string, url: string) => {
     url,
   });
 };
+
+export const deleteLink = async (id: number) => {
+  return db.delete(links).where(eq(links.id, id));
+};
+
+export const archiveLink = async (id: number) => {
+  return db
+    .update(links)
+    .set({
+      isArchived: true,
+    })
+    .where(eq(links.id, id));
+};
