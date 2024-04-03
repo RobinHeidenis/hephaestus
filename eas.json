@@ -12,7 +12,8 @@
       "developmentClient": false,
       "android": {
         "gradleCommand": ":app:assembleRelease",
-        "buildType": "apk"
+        "buildType": "apk",
+        "image": "latest"
       }
     },
     "production": {}
