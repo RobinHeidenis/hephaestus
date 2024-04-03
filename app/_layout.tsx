@@ -8,9 +8,9 @@ import { getHeaderTitle } from "@react-navigation/elements";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
-import { db } from "@/db/db";
 
-import migrations from "../.drizzle/migrations";
+import migrations from "../drizzle/migrations";
+import { db } from "@/db/db";
 
 export {
   // Catch any errors thrown by the Layout component.

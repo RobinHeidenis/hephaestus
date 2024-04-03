@@ -22,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#25232A"
-      }
+      },
+      "package": "com.robinheidenis.hephaestus"
     },
     "androidNavigationBar": {
       "backgroundColor": "#2C2831"
