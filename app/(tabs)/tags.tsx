@@ -1,11 +1,18 @@
-import { StyleSheet, View } from "react-native";
-import { Text } from "react-native-paper";
+import { StyleSheet } from "react-native";
+import { Surface, Text } from "react-native-paper";
 
 export default function TagsScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-    </View>
+    <Surface
+      style={{
+        flex: 1,
+        alignItems: "center",
+        width: "100%",
+        height: "100%",
+      }}
+    >
+      <Text>Tags page</Text>
+    </Surface>
   );
 }
 
