@@ -2,18 +2,16 @@ import { FAB, Surface } from "react-native-paper";
 import { View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { LinkCard } from "@/components/LinkCard";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { NewLinkBottomSheet } from "@/components/NewLinkBottomSheet";
 import { LinkOptionsBottomSheet } from "@/components/LinkOptionsBottomSheet";
+import { useAllActiveLinksQuery } from "@/queries/useAllActiveLinksQuery";
 
 export default function TabOneScreen() {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const linkOptionsRef = useRef<BottomSheetModal>(null);
-  const [pressedItem, setPressedItem] = useState<{
-    title: string;
-    url: string;
-  } | null>(null);
+  const { data } = useAllActiveLinksQuery();
 
   return (
     <Surface
@@ -26,13 +24,7 @@ export default function TabOneScreen() {
     >
       <View style={{ width: "100%", height: "100%" }}>
         <FlashList
-          data={[
-            { title: "Faster internet", url: "https://google.com" },
-            {
-              title: "Building a NextJs modal with capture all route",
-              url: "https://bing.com",
-            },
-          ]}
+          data={data}
           estimatedItemSize={101}
           contentContainerStyle={{
             paddingHorizontal: 8,
@@ -43,7 +35,6 @@ export default function TabOneScreen() {
               title={item.title}
               url={item.url}
               onLongPress={() => {
-                setPressedItem({ title: item.title, url: item.url });
                 linkOptionsRef.current?.present({
                   title: item.title,
                   url: item.url,

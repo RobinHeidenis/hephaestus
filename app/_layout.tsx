@@ -11,6 +11,7 @@ import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 
 import migrations from "../drizzle/migrations";
 import { db } from "@/db/db";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -48,6 +49,8 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
+const queryClient = new QueryClient();
+
 function RootLayoutNav() {
   const { error: migrationError } = useMigrations(db, migrations);
 
@@ -57,28 +60,30 @@ function RootLayoutNav() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <PaperProvider>
-        <BottomSheetModalProvider>
-          <Stack
-            screenOptions={{
-              header: (props) => {
-                const title = getHeaderTitle(props.options, props.route.name);
+      <QueryClientProvider client={queryClient}>
+        <PaperProvider>
+          <BottomSheetModalProvider>
+            <Stack
+              screenOptions={{
+                header: (props) => {
+                  const title = getHeaderTitle(props.options, props.route.name);
 
-                return (
-                  <Appbar.Header>
-                    {props.back ? (
-                      <Appbar.BackAction onPress={props.navigation.goBack} />
-                    ) : null}
-                    <Appbar.Content title={title} />
-                  </Appbar.Header>
-                );
-              },
-            }}
-          >
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          </Stack>
-        </BottomSheetModalProvider>
-      </PaperProvider>
+                  return (
+                    <Appbar.Header>
+                      {props.back ? (
+                        <Appbar.BackAction onPress={props.navigation.goBack} />
+                      ) : null}
+                      <Appbar.Content title={title} />
+                    </Appbar.Header>
+                  );
+                },
+              }}
+            >
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            </Stack>
+          </BottomSheetModalProvider>
+        </PaperProvider>
+      </QueryClientProvider>
     </GestureHandlerRootView>
   );
 }

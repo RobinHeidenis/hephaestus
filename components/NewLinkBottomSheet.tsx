@@ -10,6 +10,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { BottomSheetBackHandler } from "@/components/BottomSheetBackHandler";
+import { useCreateLinkMutation } from "@/mutations/useCreateLinkMutation";
 
 const newLinkSchema = z.object({
   title: z.string().min(1, "You need to enter a title"),
@@ -30,6 +31,14 @@ export const NewLinkBottomSheet = forwardRef<BottomSheetModal>((_, ref) => {
       url: "",
     },
   });
+  const { mutate } = useCreateLinkMutation();
+  if (typeof ref === "function")
+    throw new Error("Please pass a ref instead of a function");
+
+  const submit = (values: { title: string; url: string }) => {
+    mutate(values);
+    ref?.current?.close();
+  };
 
   return (
     <BottomSheetModal
@@ -99,7 +108,7 @@ export const NewLinkBottomSheet = forwardRef<BottomSheetModal>((_, ref) => {
                   onBlur={onBlur}
                   onChangeText={onChange}
                   textContentType={"URL"}
-                  onSubmitEditing={handleSubmit((values) => {})}
+                  onSubmitEditing={handleSubmit(submit)}
                 />
               )}
               name={"url"}
@@ -117,7 +126,7 @@ export const NewLinkBottomSheet = forwardRef<BottomSheetModal>((_, ref) => {
           <Button
             mode={"contained"}
             icon={"plus"}
-            onPress={handleSubmit((values) => {})}
+            onPress={handleSubmit(submit)}
           >
             Add link
           </Button>
