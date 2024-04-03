@@ -43,3 +43,12 @@ export const archiveLink = async (id: number) => {
     })
     .where(eq(links.id, id));
 };
+
+export const restoreLink = async (id: number) => {
+  return db
+    .update(links)
+    .set({
+      isArchived: false,
+    })
+    .where(eq(links.id, id));
+};

@@ -35,11 +35,7 @@ export default function TabOneScreen() {
               title={item.title}
               url={item.url}
               onLongPress={() => {
-                linkOptionsRef.current?.present({
-                  id: item.id,
-                  title: item.title,
-                  url: item.url,
-                });
+                linkOptionsRef.current?.present(item);
               }}
             />
           )}

@@ -10,17 +10,20 @@ import { Share, View } from "react-native";
 import { useDeleteLinkMutation } from "@/mutations/useDeleteLinkMutation";
 import { z } from "zod";
 import { useArchiveLinkMutation } from "@/mutations/useArchiveLinkMutation";
+import { useRestoreLinkMutation } from "@/mutations/useRestoreLinkMutation";
 
 const LinkOptionsBottomSheetDataSchema = z.object({
   id: z.number(),
   title: z.string(),
   url: z.string(),
+  isArchived: z.boolean(),
 });
 
 export const LinkOptionsBottomSheet = forwardRef<BottomSheetModal>((_, ref) => {
   const theme = useTheme();
   const { mutate: deleteLink } = useDeleteLinkMutation();
   const { mutate: archiveLink } = useArchiveLinkMutation();
+  const { mutate: restoreLink } = useRestoreLinkMutation();
   if (typeof ref === "function")
     throw new Error("Please pass a ref instead of a function");
 
@@ -42,9 +45,8 @@ export const LinkOptionsBottomSheet = forwardRef<BottomSheetModal>((_, ref) => {
       style={{ marginBottom: 20 }}
     >
       {(data) => {
-        const { id, title, url } = LinkOptionsBottomSheetDataSchema.parse(
-          data?.data,
-        );
+        const { id, title, url, isArchived } =
+          LinkOptionsBottomSheetDataSchema.parse(data?.data);
 
         return (
           <BottomSheetView>
@@ -70,16 +72,27 @@ export const LinkOptionsBottomSheet = forwardRef<BottomSheetModal>((_, ref) => {
                   );
                 }}
               />
-              <List.Item
-                title={"Archive"}
-                left={(props) => (
-                  <List.Icon {...props} icon={"archive-outline"} />
-                )}
-                onPress={() => {
-                  archiveLink(id);
-                  ref?.current?.close();
-                }}
-              />
+              {isArchived ? (
+                <List.Item
+                  title={"Restore"}
+                  left={(props) => <List.Icon {...props} icon={"restore"} />}
+                  onPress={() => {
+                    restoreLink(id);
+                    ref?.current?.close();
+                  }}
+                />
+              ) : (
+                <List.Item
+                  title={"Archive"}
+                  left={(props) => (
+                    <List.Icon {...props} icon={"archive-outline"} />
+                  )}
+                  onPress={() => {
+                    archiveLink(id);
+                    ref?.current?.close();
+                  }}
+                />
+              )}
               <List.Item
                 title={"Delete"}
                 left={(props) => (
