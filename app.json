@@ -38,6 +38,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "1fddc2ad-8050-4ce2-9f20-8a6073ade08c"
+      }
+    },
+    "owner": "robinheidenis"
   }
 }
