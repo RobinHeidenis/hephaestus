@@ -30,7 +30,7 @@ export const LinkCard = ({
       onPress={() => Linking.openURL(url)}
       onLongPress={onLongPress}
     >
-      <View>
+      <View style={{ maxWidth: "95%" }}>
         <Card.Content>
           <Text variant={"titleLarge"}>{title}</Text>
           <Text variant={"labelLarge"} style={{ marginTop: 4 }}>

@@ -3,14 +3,15 @@ import {
   BottomSheetModal,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import { Button, Text, TextInput, useTheme } from "react-native-paper";
+import { Button, Text, useTheme } from "react-native-paper";
 import { forwardRef } from "react";
 import { View } from "react-native";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { BottomSheetBackHandler } from "@/components/BottomSheetBackHandler";
 import { useCreateLinkMutation } from "@/mutations/useCreateLinkMutation";
+import { TextInput } from "@/components/form/TextInput";
 
 const newLinkSchema = z.object({
   title: z.string().min(1, "You need to enter a title"),
@@ -65,63 +66,31 @@ export const NewLinkBottomSheet = forwardRef<BottomSheetModal>((_, ref) => {
             height: 310,
           }}
         >
-          <View>
-            <Controller
-              render={({ field: { onChange, onBlur, value, ref } }) => (
-                <TextInput
-                  ref={ref}
-                  label={"Title"}
-                  mode={"outlined"}
-                  style={{ marginTop: 16, marginBottom: 4 }}
-                  autoCorrect
-                  autoFocus
-                  enterKeyHint={"next"}
-                  error={!!errors.title}
-                  value={value}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  onSubmitEditing={() => setFocus("url")}
-                  blurOnSubmit={false}
-                />
-              )}
+          <View style={{ gap: 16, marginTop: 8 }}>
+            <TextInput
               name={"title"}
+              label={"Title"}
               control={control}
+              onSubmitEditing={() => setFocus("url")}
+              inputProps={{
+                autoCorrect: true,
+                autoFocus: true,
+                enterKeyHint: "next",
+              }}
             />
-            {errors.title && (
-              <Text
-                variant={"bodySmall"}
-                style={{ marginLeft: 16, color: theme.colors.error }}
-              >
-                {errors.title.message}
-              </Text>
-            )}
-            <Controller
-              render={({ field: { onChange, onBlur, value, ref } }) => (
-                <TextInput
-                  ref={ref}
-                  label={"Link"}
-                  mode={"outlined"}
-                  style={{ marginTop: 16, marginBottom: 4 }}
-                  enterKeyHint={"send"}
-                  error={!!errors.url}
-                  value={value}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  textContentType={"URL"}
-                  onSubmitEditing={handleSubmit(submit)}
-                />
-              )}
+            <TextInput
               name={"url"}
+              label={"Link"}
               control={control}
+              onSubmitEditing={handleSubmit(submit)}
+              inputProps={{
+                autoCorrect: false,
+                enterKeyHint: "send",
+                textContentType: "URL",
+                keyboardType: "url",
+                autoCapitalize: "none",
+              }}
             />
-            {errors.url && (
-              <Text
-                variant={"bodySmall"}
-                style={{ marginLeft: 16, color: theme.colors.error }}
-              >
-                {errors.url.message}
-              </Text>
-            )}
           </View>
           <Button
             mode={"contained"}
