@@ -1,5 +1,5 @@
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 
 import { useEffect } from "react";
@@ -12,6 +12,7 @@ import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import migrations from "../drizzle/migrations";
 import { db } from "@/db/db";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ShareIntentProvider, useShareIntentContext } from "expo-share-intent";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -59,31 +60,54 @@ function RootLayoutNav() {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <QueryClientProvider client={queryClient}>
-        <PaperProvider>
-          <BottomSheetModalProvider>
-            <Stack
-              screenOptions={{
-                header: (props) => {
-                  const title = getHeaderTitle(props.options, props.route.name);
+    <ShareIntentProvider
+      options={{
+        resetOnBackground: true,
+        onResetShareIntent: () => router.replace("/"),
+      }}
+    >
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <QueryClientProvider client={queryClient}>
+          <PaperProvider>
+            <BottomSheetModalProvider>
+              <Stack
+                screenOptions={{
+                  header: (props) => {
+                    const title = getHeaderTitle(
+                      props.options,
+                      props.route.name,
+                    );
+                    const { hasShareIntent, resetShareIntent } =
+                      useShareIntentContext();
 
-                  return (
-                    <Appbar.Header>
-                      {props.back ? (
-                        <Appbar.BackAction onPress={props.navigation.goBack} />
-                      ) : null}
-                      <Appbar.Content title={title} />
-                    </Appbar.Header>
-                  );
-                },
-              }}
-            >
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            </Stack>
-          </BottomSheetModalProvider>
-        </PaperProvider>
-      </QueryClientProvider>
-    </GestureHandlerRootView>
+                    return (
+                      <Appbar.Header>
+                        {hasShareIntent && props.route.name === "share" && (
+                          <Appbar.BackAction
+                            onPress={() => resetShareIntent()}
+                          />
+                        )}
+                        {props.back ? (
+                          <Appbar.BackAction
+                            onPress={props.navigation.goBack}
+                          />
+                        ) : null}
+                        <Appbar.Content title={title} />
+                      </Appbar.Header>
+                    );
+                  },
+                }}
+              >
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="share"
+                  options={{ presentation: "modal", title: "New link" }}
+                />
+              </Stack>
+            </BottomSheetModalProvider>
+          </PaperProvider>
+        </QueryClientProvider>
+      </GestureHandlerRootView>
+    </ShareIntentProvider>
   );
 }

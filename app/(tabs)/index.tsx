@@ -2,16 +2,25 @@ import { FAB, Surface, Text } from "react-native-paper";
 import { View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { LinkCard } from "@/components/LinkCard";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { NewLinkBottomSheet } from "@/components/NewLinkBottomSheet";
 import { LinkOptionsBottomSheet } from "@/components/LinkOptionsBottomSheet";
 import { useAllActiveLinksQuery } from "@/queries/useAllActiveLinksQuery";
+import { useShareIntentContext } from "expo-share-intent";
+import { router } from "expo-router";
 
 export default function TabOneScreen() {
+  const { hasShareIntent } = useShareIntentContext();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const linkOptionsRef = useRef<BottomSheetModal>(null);
   const { data } = useAllActiveLinksQuery();
+
+  useEffect(() => {
+    if (hasShareIntent) {
+      router.replace("/share");
+    }
+  }, [hasShareIntent]);
 
   return (
     <Surface
